@@ -1,4 +1,4 @@
-# TotalSpineSeg
+# Slicer module for TotalSpineSeg
 
 ![Extension Screenshot](Screenshot01.jpg)
 
