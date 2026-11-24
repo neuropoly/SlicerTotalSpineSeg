@@ -456,6 +456,17 @@ class TotalSpineSegWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                 traceback.print_exc()
                 return
 
+        # The first segmentation downloads the model weights (TotalSpineSeg does the download), so ask once before the first run
+        settings = slicer.app.userSettings()
+        modelDownloadConfirmedKey = "TotalSpineSeg/ModelDownloadConfirmed"
+        if settings.value(modelDownloadConfirmedKey) != "true":
+            if not slicer.util.confirmOkCancelDisplay(
+                _("The first segmentation downloads the TotalSpineSeg model weights if they are not already installed (about 2 GB to download, about 4 GB of disk space), which may take several minutes. Click OK to proceed."),
+                _("Confirm model download")):
+                self.ui.statusLabel.plainText = _("Model download cancelled.")
+                return
+            settings.setValue(modelDownloadConfirmedKey, "true")
+
         self.ui.applyButton.enabled = False
         self.ui.statusLabel.plainText = "Processing started..."
         slicer.app.processEvents()
